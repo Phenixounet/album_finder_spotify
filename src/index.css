@@ -7,6 +7,7 @@
 
 /* ==== GLOBAL LAYOUT ==== */
 @import "./styles/general.css";
+@import "./styles/theme.css";
 
 /* ==== THEMES (Dark / Light) ==== */
 @import "./styles/theme.css";
@@ -17,3 +18,8 @@
 
 /* ==== RESPONSIVE ==== */
 @import "./styles/responsive.css";
+
+/* ==== SPOTIFY WRAPPED PAGES ==== */
+@import "./styles/login.css";
+@import "./styles/callback.css";
+@import "./styles/wrapped.css";

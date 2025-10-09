@@ -1,0 +1,13 @@
+/*
+** 
+** spotify_album_finder
+** File description:
+** callback.css
+*/
+
+.callback-text {
+    text-align: center;
+    margin-top: 200px;
+    font-size: 18px;
+    color: #fff;
+}

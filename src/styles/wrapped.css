@@ -1,0 +1,53 @@
+/*
+**
+** spotify_album_finder
+** File description:
+** wrapped.css
+*/
+
+.wrapped-container {
+    text-align: center;
+    margin-top: 40px;
+    color: white;
+}
+
+.wrapped-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.wrapped-section {
+    margin-top: 50px;
+}
+
+.wrapped-section h3 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.wrapped-card {
+    width: 200px;
+    margin: 10px;
+    background-color: #181818;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s;
+}
+
+.wrapped-card:hover {
+    transform: scale(1.05);
+}
+
+.wrapped-card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.wrapped-card .card-title {
+    font-weight: bold;
+    font-size: 16px;
+}
