@@ -6,69 +6,136 @@
 */
 
 import { useEffect, useState } from "react";
-import { Container, Row, Card } from "react-bootstrap";
+import { useSpotifyAuth } from "../context/SpotifyAuthContext";
 
 function Wrapped()
 {
+    const { token, user } = useSpotifyAuth();
+    const [totalListeningMinutes, setTotalListeningMinutes] = useState(0);
     const [topArtists, setTopArtists] = useState([]);
     const [topTracks, setTopTracks] = useState([]);
-    const token = localStorage.getItem("spotify_access_token");
 
+    /* Fetch listening time and top data */
     useEffect(() => {
         if (!token)
             return;
 
-        const headers = { Authorization: "Bearer " + token };
+        /* Recently played tracks */
+        fetch("https://api.spotify.com/v1/me/player/recently-played?limit=50", {
+            headers: { Authorization: "Bearer " + token },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (!data.items)
+                    return;
+
+                let totalMs = 0;
+                for (const item of data.items)
+                    totalMs += item.track.duration_ms;
+
+                setTotalListeningMinutes(Math.floor(totalMs / 60000));
+            })
+            .catch((err) => console.error("Recent tracks error:", err));
 
         /* Top artists */
-        fetch("https://api.spotify.com/v1/me/top/artists?limit=5", { headers })
+        fetch("https://api.spotify.com/v1/me/top/artists?limit=5", {
+            headers: { Authorization: "Bearer " + token },
+        })
             .then((res) => res.json())
             .then((data) => setTopArtists(data.items || []))
-            .catch((err) => console.error("Artist error:", err));
+            .catch((err) => console.error("Top artists error:", err));
 
         /* Top tracks */
-        fetch("https://api.spotify.com/v1/me/top/tracks?limit=5", { headers })
+        fetch("https://api.spotify.com/v1/me/top/tracks?limit=5", {
+            headers: { Authorization: "Bearer " + token },
+        })
             .then((res) => res.json())
             .then((data) => setTopTracks(data.items || []))
-            .catch((err) => console.error("Track error:", err));
+            .catch((err) => console.error("Top tracks error:", err));
     }, [token]);
 
     return (
-        <Container className="wrapped-container">
-            <h2 className="wrapped-title">🎁 Your 2025 Spotify Wrapped</h2>
+        <div className="favorites-container">
+            <h2>🎁 Your 2025 Spotify Wrapped</h2>
+            {user && (
+                <p>
+                    Welcome, <strong>{user.display_name}</strong> 👋
+                </p>
+            )}
 
-            <div className="wrapped-section">
+            <h4>
+                ⏱️ You’ve listened for about{" "}
+                <strong>{totalListeningMinutes}</strong> minutes recently!
+            </h4>
+
+            <section style={{ marginTop: "40px" }}>
                 <h3>Top Artists</h3>
-                <Row style={{ justifyContent: "center" }}>
+                <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center"
+                }}>
                     {topArtists.map((artist) => (
-                        <Card key={artist.id} className="wrapped-card">
-                            <Card.Img src={artist.images[0]?.url} />
-                            <Card.Body>
-                                <Card.Title>{artist.name}</Card.Title>
-                                <Card.Text>
-                                    {artist.genres.slice(0, 2).join(", ")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+                        <div
+                            key={artist.id}
+                            style={{
+                                width: "180px",
+                                margin: "10px",
+                                background: "#181818",
+                                padding: "10px",
+                                borderRadius: "8px",
+                            }}
+                        >
+                            <img
+                                src={artist.images?.[0]?.url}
+                                alt={artist.name}
+                                style={{ width: "100%", borderRadius: "8px" }}
+                            />
+                            <p style={{ fontWeight: "bold", marginTop: "8px" }}>
+                                {artist.name}
+                            </p>
+                            <p style={{ fontSize: "13px", color: "#bbb" }}>
+                                {artist.genres?.slice(0, 2).join(", ")}
+                            </p>
+                        </div>
                     ))}
-                </Row>
-            </div>
+                </div>
+            </section>
 
-            <div className="wrapped-section">
+            <section style={{ marginTop: "40px" }}>
                 <h3>Top Tracks</h3>
-                <Row style={{ justifyContent: "center" }}>
+                <div style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center"
+                }}>
                     {topTracks.map((track) => (
-                        <Card key={track.id} className="wrapped-card">
-                            <Card.Img src={track.album.images[0]?.url} />
-                            <Card.Body>
-                                <Card.Title>{track.name}</Card.Title>
-                                <Card.Text>{track.artists[0].name}</Card.Text>
-                            </Card.Body>
-                        </Card>
+                        <div
+                            key={track.id}
+                            style={{
+                                width: "180px",
+                                margin: "10px",
+                                background: "#181818",
+                                padding: "10px",
+                                borderRadius: "8px",
+                            }}
+                        >
+                            <img
+                                src={track.album.images?.[0]?.url}
+                                alt={track.name}
+                                style={{ width: "100%", borderRadius: "8px" }}
+                            />
+                            <p style={{ fontWeight: "bold", marginTop: "8px" }}>
+                                {track.name}
+                            </p>
+                            <p style={{ fontSize: "13px", color: "#bbb" }}>
+                                {track.artists[0].name}
+                            </p>
+                        </div>
                     ))}
-                </Row>
-            </div>
-        </Container>
+                </div>
+            </section>
+        </div>
     );
 }
 

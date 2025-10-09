@@ -20,3 +20,21 @@ body[data-theme="light"] {
 .nav-link {
     color: inherit;
 }
+
+.login-spotify-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-spotify-btn {
+    background-color: #1db954;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 50px;
+    padding: 10px 20px;
+}
+
+.login-spotify-btn:hover {
+    opacity: 0.85;
+}

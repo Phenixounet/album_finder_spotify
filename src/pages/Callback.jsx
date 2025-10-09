@@ -7,45 +7,57 @@
 
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSpotifyAuth } from "../context/SpotifyAuthContext";
 
 function Callback()
 {
     const navigate = useNavigate();
+    const { setToken, setUser } = useSpotifyAuth();
 
     useEffect(() => {
-        const code = new URLSearchParams(window.location.search).get("code");
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
         if (!code)
             return;
 
-        const authParams = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                Authorization:
-                    "Basic " +
-                    btoa(
-                        import.meta.env.VITE_CLIENT_ID +
-                        ":" +
-                        import.meta.env.VITE_CLIENT_SECRET
-                    ),
-            },
-            body:
-                "grant_type=authorization_code" +
-                "&code=" + code +
-                "&redirect_uri=" +
-                encodeURIComponent(import.meta.env.VITE_REDIRECT_URI),
-        };
+        const body = new URLSearchParams({
+            grant_type: "authorization_code",
+            code: code,
+            redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+            client_id: import.meta.env.VITE_CLIENT_ID,
+            client_secret: import.meta.env.VITE_CLIENT_SECRET,
+        });
 
-        fetch("https://accounts.spotify.com/api/token", authParams)
+        fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: body.toString(),
+        })
             .then((res) => res.json())
             .then((data) => {
-                localStorage.setItem("spotify_access_token", data.access_token);
-                navigate("/wrapped");
-            })
-            .catch((err) => console.error("Error retrieving token:", err));
-    }, [navigate]);
+                if (data.access_token) {
+                    setToken(data.access_token);
 
-    return <p className="callback-text">Authenticating with Spotify...</p>;
+                    /* Get user info */
+                    fetch("https://api.spotify.com/v1/me", {
+                        headers: { Authorization: "Bearer " + data.access_token },
+                    })
+                        .then((res) => res.json())
+                        .then((userData) => {
+                            setUser(userData);
+                            navigate("/wrapped");
+                        });
+                }
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
+    return (
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+            <h3>Connecting to Spotify...</h3>
+        </div>
+    );
 }
 
 export default Callback;
+
