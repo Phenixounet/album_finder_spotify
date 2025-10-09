@@ -1,0 +1,36 @@
+/*
+**
+** spotify_album_finder
+** File description:
+** loginButton.css
+*/
+
+.login-spotify-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-spotify-btn {
+    background-color: #1db954;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 22px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.login-spotify-btn:hover {
+    background-color: #1ed760;
+}
+
+.login-spotify-btn svg {
+    font-size: 20px;
+    vertical-align: middle;
+}

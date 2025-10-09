@@ -5,16 +5,18 @@
 ** App.jsx
 */
 
-import { Container, Row, Nav } from "react-bootstrap";
+import { Container, Row, Nav, Button } from "react-bootstrap";
 import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { FaSpotify } from "react-icons/fa";
 
 import SearchBar from "./components/SearchBar";
 import AlbumCard from "./components/AlbumCard";
 import Favorites from "./pages/Favorites";
-
-const clientId = import.meta.env.VITE_CLIENT_ID;
-const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
+import Login from "./pages/Login";
+import Callback from "./pages/Callback";
+import Wrapped from "./pages/Wrapped";
+import { getSpotifyLoginUrl } from "./utils/spotifyAuth";
 
 function App()
 {
@@ -23,13 +25,10 @@ function App()
     const [accessToken, setAccessToken] = useState("");
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
 
-    /* Theme management */
-    useEffect(() => {
-        document.body.className = theme;
-        localStorage.setItem("theme", theme);
-    }, [theme]);
+    const clientId = import.meta.env.VITE_CLIENT_ID;
+    const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
-    /* Fetch Spotify API access token */
+    /* Fetch Spotify token once */
     useEffect(() => {
         const authParams = {
             method: "POST",
@@ -44,10 +43,10 @@ function App()
         fetch("https://accounts.spotify.com/api/token", authParams)
             .then((res) => res.json())
             .then((data) => setAccessToken(data.access_token))
-            .catch((err) => console.error("Error fetching token:", err));
+            .catch((err) => console.error("Token error:", err));
     }, []);
 
-    /* Artist search */
+    /* Search function */
     async function search()
     {
         if (searchInput.trim() === "")
@@ -80,10 +79,10 @@ function App()
         )
             .then((res) => res.json())
             .then((data) => setAlbums(data.items))
-            .catch((err) => console.error("Error fetching albums:", err));
+            .catch((err) => console.error("Album fetch error:", err));
     }
 
-    /* Toggle theme (light/dark) */
+    /* Toggle light/dark theme */
     function toggleTheme()
     {
         setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -95,41 +94,58 @@ function App()
                 <Nav.Item>
                     <Link to="/" className="nav-link">Search</Link>
                 </Nav.Item>
+
                 <Nav.Item>
                     <Link to="/favorites" className="nav-link">Favorites ❤️</Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                    <Link to="/wrapped" className="nav-link">Wrapped 🎁</Link>
                 </Nav.Item>
             </Nav>
 
             <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <>
-                            <SearchBar
-                                searchInput={searchInput}
-                                setSearchInput={setSearchInput}
-                                onSearch={search}
-                                onToggleTheme={toggleTheme}
-                                currentTheme={theme}
-                            />
-                            <Container>
-                                <Row
-                                    style={{
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        justifyContent: "space-around",
-                                        alignContent: "center",
-                                    }}
-                                >
-                                    {albums.map((album) => (
-                                        <AlbumCard key={album.id} album={album} />
-                                    ))}
-                                </Row>
-                            </Container>
-                        </>
-                    }
-                />
+                <Route path="/" element={
+                    <>
+                        <SearchBar
+                            searchInput={searchInput}
+                            setSearchInput={setSearchInput}
+                            onSearch={search}
+                            onToggleTheme={toggleTheme}
+                            currentTheme={theme}
+                        />
+
+                        {/* Spotify Login Button */}
+                        <div className="login-spotify-wrapper">
+                            <Button
+                                href={getSpotifyLoginUrl()}
+                                className="login-spotify-btn"
+                            >
+                                <FaSpotify /> Login with Spotify
+                            </Button>
+                        </div>
+
+                        {/* Albums */}
+                        <Container>
+                            <Row
+                                style={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    justifyContent: "space-around",
+                                }}
+                            >
+                                {albums.map((album) => (
+                                    <AlbumCard key={album.id} album={album} />
+                                ))}
+                            </Row>
+                        </Container>
+                    </>
+                } />
+
                 <Route path="/favorites" element={<Favorites />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/callback" element={<Callback />} />
+                <Route path="/wrapped" element={<Wrapped />} />
             </Routes>
         </div>
     );
