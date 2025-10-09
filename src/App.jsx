@@ -5,9 +5,9 @@
 ** App.jsx
 */
 
-import { Container, Row, Nav, Button } from "react-bootstrap";
-import { Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import { Container, Row, Nav, Button } from "react-bootstrap";
 import { FaSpotify } from "react-icons/fa";
 
 import SearchBar from "./components/SearchBar";
@@ -17,6 +17,7 @@ import Login from "./pages/Login";
 import Callback from "./pages/Callback";
 import Wrapped from "./pages/Wrapped";
 import { getSpotifyLoginUrl } from "./utils/spotifyAuth";
+import { FavoritesProvider } from "./context/FavoritesContext";
 
 function App()
 {
@@ -28,7 +29,13 @@ function App()
     const clientId = import.meta.env.VITE_CLIENT_ID;
     const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
-    /* Fetch Spotify token once */
+    /* Apply theme to body */
+    useEffect(() => {
+        document.body.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+    }, [theme]);
+
+    /* Fetch Spotify token */
     useEffect(() => {
         const authParams = {
             method: "POST",
@@ -46,7 +53,7 @@ function App()
             .catch((err) => console.error("Token error:", err));
     }, []);
 
-    /* Search function */
+    /* Search artist albums */
     async function search()
     {
         if (searchInput.trim() === "")
@@ -82,72 +89,60 @@ function App()
             .catch((err) => console.error("Album fetch error:", err));
     }
 
-    /* Toggle light/dark theme */
     function toggleTheme()
     {
         setTheme((prev) => (prev === "dark" ? "light" : "dark"));
     }
 
     return (
-        <div className="App">
-            <Nav className="justify-content-center" style={{ marginBottom: "20px" }}>
-                <Nav.Item>
-                    <Link to="/" className="nav-link">Search</Link>
-                </Nav.Item>
+        <FavoritesProvider>
+            <div className="App">
+                <Nav className="justify-content-center" style={{ marginBottom: "20px" }}>
+                    <Nav.Item><Link to="/" className="nav-link">Search</Link></Nav.Item>
+                    <Nav.Item><Link to="/favorites" className="nav-link">Favorites ❤️</Link></Nav.Item>
+                    <Nav.Item><Link to="/wrapped" className="nav-link">Wrapped 🎁</Link></Nav.Item>
+                </Nav>
 
-                <Nav.Item>
-                    <Link to="/favorites" className="nav-link">Favorites ❤️</Link>
-                </Nav.Item>
-
-                <Nav.Item>
-                    <Link to="/wrapped" className="nav-link">Wrapped 🎁</Link>
-                </Nav.Item>
-            </Nav>
-
-            <Routes>
-                <Route path="/" element={
-                    <>
-                        <SearchBar
-                            searchInput={searchInput}
-                            setSearchInput={setSearchInput}
-                            onSearch={search}
-                            onToggleTheme={toggleTheme}
-                            currentTheme={theme}
-                        />
-
-                        {/* Spotify Login Button */}
-                        <div className="login-spotify-wrapper">
-                            <Button
-                                href={getSpotifyLoginUrl()}
-                                className="login-spotify-btn"
-                            >
-                                <FaSpotify /> Login with Spotify
-                            </Button>
-                        </div>
-
-                        {/* Albums */}
-                        <Container>
-                            <Row
-                                style={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    justifyContent: "space-around",
-                                }}
-                            >
-                                {albums.map((album) => (
-                                    <AlbumCard key={album.id} album={album} />
-                                ))}
-                            </Row>
-                        </Container>
-                    </>
-                } />
-
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/callback" element={<Callback />} />
-                <Route path="/wrapped" element={<Wrapped />} />
-            </Routes>
-        </div>
+                <Routes>
+                    <Route path="/" element={
+                        <>
+                            <SearchBar
+                                searchInput={searchInput}
+                                setSearchInput={setSearchInput}
+                                onSearch={search}
+                                onToggleTheme={toggleTheme}
+                                currentTheme={theme}
+                            />
+                            <div className="login-spotify-wrapper">
+                                <Button
+                                    href={getSpotifyLoginUrl()}
+                                    className="login-spotify-btn"
+                                >
+                                    <FaSpotify /> Login with Spotify
+                                </Button>
+                            </div>
+                            <Container>
+                                <Row
+                                    style={{
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                        justifyContent: "space-around",
+                                    }}
+                                >
+                                    {albums.map((album) => (
+                                        <AlbumCard key={album.id} album={album} />
+                                    ))}
+                                </Row>
+                            </Container>
+                        </>
+                    } />
+                    <Route path="/favorites" element={<Favorites />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/callback" element={<Callback />} />
+                    <Route path="/wrapped" element={<Wrapped />} />
+                </Routes>
+            </div>
+        </FavoritesProvider>
     );
 }
 

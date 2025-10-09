@@ -6,59 +6,41 @@
 */
 
 import { Card, Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useFavorites } from "../context/FavoritesContext";
+import "../styles/albumcard.css";
 
-function AlbumCard({ album, onFavoriteToggle, isFavorite = false })
+function AlbumCard({ album })
 {
-    const [favorite, setFavorite] = useState(isFavorite);
+    const { addFavorite, removeFavorite, isFavorite } = useFavorites();
+    const favorite = isFavorite(album.id);
 
-    useEffect(() => {
-        setFavorite(isFavorite);
-    }, [isFavorite]);
-
-    /* Add or remove album from favorites */
     function toggleFavorite()
     {
-        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
         if (favorite)
-            favorites = favorites.filter((a) => a.id !== album.id);
+            removeFavorite(album.id);
         else
-            favorites.push(album);
-
-        localStorage.setItem("favorites", JSON.stringify(favorites));
-        setFavorite(!favorite);
-
-        if (onFavoriteToggle)
-            onFavoriteToggle(album.id);
+            addFavorite(album);
     }
 
     return (
         <Card className="album-card">
-            <div className="album-header">
+            <div className="album-img-wrapper">
+                <Card.Img src={album.images[0]?.url} />
                 <button
-                    className="heart-btn"
+                    className="fav-btn"
                     onClick={toggleFavorite}
-                    aria-label="toggle favorite"
+                    aria-label="Toggle favorite"
                 >
-                    {favorite ? "❤️" : "🤍"}
+                    {favorite ? <FaHeart color="#ff4b5c" /> : <FaRegHeart />}
                 </button>
             </div>
-            <Card.Img
-                src={album.images[0]?.url}
-                alt={album.name}
-                className="album-image"
-            />
             <Card.Body>
-                <Card.Title className="album-title">{album.name}</Card.Title>
-                <Card.Text className="album-date">
-                    Release Date:<br /> {album.release_date}
-                </Card.Text>
+                <Card.Title>{album.name}</Card.Title>
+                <Card.Text>Release Date: {album.release_date}</Card.Text>
                 <Button
                     href={album.external_urls.spotify}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="album-button"
+                    className="album-link-btn"
                 >
                     Album Link
                 </Button>
