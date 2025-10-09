@@ -1,0 +1,30 @@
+/*
+** 
+** spotify_album_finder
+** File description:
+** responsive.css
+*/
+
+@media screen and (max-width: 768px) {
+    .App {
+        padding: 30px 10px;
+    }
+
+    .album-card {
+        width: 160px;
+    }
+
+    .album-title {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .album-card {
+        width: 140px;
+    }
+
+    .album-title {
+        font-size: 14px;
+    }
+}

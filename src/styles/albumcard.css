@@ -1,0 +1,70 @@
+/*
+**
+** spotify_album_finder
+** File description:
+** albumcard.css
+*/
+
+.album-card {
+    background-color: white;
+    color: black;
+    width: 220px;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+}
+
+.album-card:hover {
+    transform: translateY(-5px);
+}
+
+.album-image {
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.album-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: black;
+    text-align: center;
+}
+
+.album-date {
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+.album-button {
+    background-color: black !important;
+    color: white !important;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.heart-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.heart-btn:hover {
+    transform: scale(1.2);
+}
+
+.album-header {
+    position: relative;
+}

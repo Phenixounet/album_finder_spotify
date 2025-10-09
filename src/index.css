@@ -1,0 +1,19 @@
+/*
+**
+** spotify_album_finder
+** File description:
+** index.css
+*/
+
+/* ==== GLOBAL LAYOUT ==== */
+@import "./styles/general.css";
+
+/* ==== THEMES (Dark / Light) ==== */
+@import "./styles/theme.css";
+
+/* ==== COMPONENTS ==== */
+@import "./styles/searchbar.css";
+@import "./styles/albumcard.css";
+
+/* ==== RESPONSIVE ==== */
+@import "./styles/responsive.css";
