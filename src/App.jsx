@@ -22,7 +22,9 @@ import { FavoritesProvider } from "./context/FavoritesContext";
 import { SpotifyAuthProvider, useSpotifyAuth } from "./context/SpotifyAuthContext";
 
 import "./styles/loginButton.css";
+import "./styles/logoutButton.css";
 import "./styles/theme.css";
+import "./styles/navbar.css";
 
 function AppContent()
 {
@@ -102,12 +104,23 @@ function AppContent()
 
     return (
         <div className="App">
-            <Nav className="justify-content-center" style={{ marginBottom: "20px" }}>
-                <Nav.Item><Link to="/" className="nav-link">Search</Link></Nav.Item>
-                <Nav.Item><Link to="/favorites" className="nav-link">Favorites ❤️</Link></Nav.Item>
-                <Nav.Item><Link to="/wrapped" className="nav-link">Wrapped 🎁</Link></Nav.Item>
-            </Nav>
+            <Nav className="justify-content-center align-items-center nav-bar">
+                <Nav.Item>
+                    <Link to="/" className="nav-link">Search</Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/favorites" className="nav-link">Favorites ❤️</Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Link to="/wrapped" className="nav-link">Wrapped 🎁</Link>
+                </Nav.Item>
 
+                {token && (
+                    <Nav.Item className="logout-nav-item">
+                        <LogoutButton />
+                    </Nav.Item>
+                )}
+            </Nav>
             <Routes>
                 <Route path="/" element={
                     <>
@@ -119,7 +132,6 @@ function AppContent()
                             currentTheme={theme}
                         />
 
-                        {/* Show login button only if not logged in */}
                         {!token && (
                             <div className="login-spotify-wrapper">
                                 <Button
@@ -152,6 +164,7 @@ function AppContent()
                 <Route path="/wrapped" element={<Wrapped />} />
             </Routes>
         </div>
+        
     );
 }
 

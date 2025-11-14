@@ -1,0 +1,40 @@
+/*
+**
+** spotify_album_finder
+** File description:
+** 
+*/
+
+.nav-bar {
+    margin-bottom: 20px;
+}
+
+.nav-link {
+    color: white !important;
+    font-size: 18px;
+    margin: 0 12px;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.logout-nav-item {
+    margin-left: 20px;
+}
+
+.logout-btn {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid #ffffff33;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+    background-color: #ffffff22;
+    transform: scale(1.05);
+}

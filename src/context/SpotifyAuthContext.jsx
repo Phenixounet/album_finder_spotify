@@ -1,8 +1,8 @@
 /*
-** 
+**
 ** spotify_album_finder
 ** File description:
-** SpotifyAuthContext.jsx
+** 
 */
 
 import { createContext, useContext, useState, useEffect } from "react";
@@ -11,28 +11,47 @@ const SpotifyAuthContext = createContext();
 
 export function SpotifyAuthProvider({ children })
 {
-    const [token, setToken] = useState(localStorage.getItem("spotify_token") || null);
+    /* Use sessionStorage so user disconnects when browser is closed */
+    const [token, setToken] = useState(
+        sessionStorage.getItem("spotify_token") || null
+    );
     const [user, setUser] = useState(
-        JSON.parse(localStorage.getItem("spotify_user")) || null
+        JSON.parse(sessionStorage.getItem("spotify_user")) || null
     );
 
-    /* Save state in localStorage */
+    /* Save token */
     useEffect(() => {
         if (token)
-            localStorage.setItem("spotify_token", token);
+            sessionStorage.setItem("spotify_token", token);
         else
-            localStorage.removeItem("spotify_token");
+            sessionStorage.removeItem("spotify_token");
     }, [token]);
 
+    /* Save user */
     useEffect(() => {
         if (user)
-            localStorage.setItem("spotify_user", JSON.stringify(user));
+            sessionStorage.setItem("spotify_user", JSON.stringify(user));
         else
-            localStorage.removeItem("spotify_user");
+            sessionStorage.removeItem("spotify_user");
     }, [user]);
 
+    /* Logout function */
+    function logout()
+    {
+        setToken(null);
+        setUser(null);
+        sessionStorage.removeItem("spotify_token");
+        sessionStorage.removeItem("spotify_user");
+    }
+
     return (
-        <SpotifyAuthContext.Provider value={{ token, setToken, user, setUser }}>
+        <SpotifyAuthContext.Provider value={{
+            token,
+            setToken,
+            user,
+            setUser,
+            logout
+        }}>
             {children}
         </SpotifyAuthContext.Provider>
     );
