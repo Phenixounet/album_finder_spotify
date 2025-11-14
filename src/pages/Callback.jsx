@@ -38,7 +38,6 @@ function Callback()
                 if (data.access_token) {
                     setToken(data.access_token);
 
-                    /* Get user info */
                     fetch("https://api.spotify.com/v1/me", {
                         headers: { Authorization: "Bearer " + data.access_token },
                     })

@@ -2,7 +2,7 @@
 **
 ** spotify_album_finder
 ** File description:
-** wrapped.css
+** 
 */
 
 .wrapped-container {
@@ -27,6 +27,12 @@
     margin-bottom: 20px;
 }
 
+.wrapped-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .wrapped-card {
     width: 200px;
     margin: 10px;
@@ -34,6 +40,7 @@
     border: none;
     color: white;
     border-radius: 10px;
+    padding-bottom: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s;
 }
@@ -42,12 +49,22 @@
     transform: scale(1.05);
 }
 
-.wrapped-card img {
+.wrapped-card-image {
+    width: 100%;
+    height: auto;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    object-fit: cover;
 }
 
-.wrapped-card .card-title {
+.wrapped-card-title {
     font-weight: bold;
     font-size: 16px;
+    margin-top: 8px;
+}
+
+.wrapped-card-subtitle {
+    font-size: 13px;
+    color: #bbb;
+    margin-top: 5px;
 }

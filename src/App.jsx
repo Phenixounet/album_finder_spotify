@@ -24,7 +24,6 @@ import { SpotifyAuthProvider, useSpotifyAuth } from "./context/SpotifyAuthContex
 import "./styles/loginButton.css";
 import "./styles/theme.css";
 
-/* ----------- Inner App Component (uses context) ----------- */
 function AppContent()
 {
     const [searchInput, setSearchInput] = useState("");

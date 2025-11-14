@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { useSpotifyAuth } from "../context/SpotifyAuthContext";
+import "../styles/wrapped.css";
 
 function Wrapped()
 {
@@ -30,9 +31,9 @@ function Wrapped()
                     return;
 
                 let totalMs = 0;
+
                 for (const item of data.items)
                     totalMs += item.track.duration_ms;
-
                 setTotalListeningMinutes(Math.floor(totalMs / 60000));
             })
             .catch((err) => console.error("Recent tracks error:", err));
@@ -55,7 +56,7 @@ function Wrapped()
     }, [token]);
 
     return (
-        <div className="favorites-container">
+        <div className="favorites-container wrapped-container">
             <h2>🎁 Your 2025 Spotify Wrapped</h2>
             {user && (
                 <p>
@@ -68,33 +69,23 @@ function Wrapped()
                 <strong>{totalListeningMinutes}</strong> minutes recently!
             </h4>
 
-            <section style={{ marginTop: "40px" }}>
+            <section className="wrapped-section">
                 <h3>Top Artists</h3>
-                <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center"
-                }}>
+                <div className="wrapped-grid">
                     {topArtists.map((artist) => (
                         <div
                             key={artist.id}
-                            style={{
-                                width: "180px",
-                                margin: "10px",
-                                background: "#181818",
-                                padding: "10px",
-                                borderRadius: "8px",
-                            }}
+                            className="wrapped-card"
                         >
                             <img
                                 src={artist.images?.[0]?.url}
                                 alt={artist.name}
-                                style={{ width: "100%", borderRadius: "8px" }}
+                                className="wrapped-card-image"
                             />
-                            <p style={{ fontWeight: "bold", marginTop: "8px" }}>
+                            <p className="wrapped-card-title">
                                 {artist.name}
                             </p>
-                            <p style={{ fontSize: "13px", color: "#bbb" }}>
+                            <p className="wrapped-card-subtitle">
                                 {artist.genres?.slice(0, 2).join(", ")}
                             </p>
                         </div>
@@ -102,33 +93,23 @@ function Wrapped()
                 </div>
             </section>
 
-            <section style={{ marginTop: "40px" }}>
+            <section className="wrapped-section">
                 <h3>Top Tracks</h3>
-                <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center"
-                }}>
+                <div className="wrapped-grid">
                     {topTracks.map((track) => (
                         <div
                             key={track.id}
-                            style={{
-                                width: "180px",
-                                margin: "10px",
-                                background: "#181818",
-                                padding: "10px",
-                                borderRadius: "8px",
-                            }}
+                            className="wrapped-card"
                         >
                             <img
                                 src={track.album.images?.[0]?.url}
                                 alt={track.name}
-                                style={{ width: "100%", borderRadius: "8px" }}
+                                className="wrapped-card-image"
                             />
-                            <p style={{ fontWeight: "bold", marginTop: "8px" }}>
+                            <p className="wrapped-card-title">
                                 {track.name}
                             </p>
-                            <p style={{ fontSize: "13px", color: "#bbb" }}>
+                            <p className="wrapped-card-subtitle">
                                 {track.artists[0].name}
                             </p>
                         </div>
